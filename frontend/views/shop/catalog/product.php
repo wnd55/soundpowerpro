@@ -71,6 +71,7 @@ $price = PriceHelper::format($product->price_new);
 
 
                     <p><?= Yii::$app->formatter->asHtml($product->description) ?></p>
+
                     <p>Теги: <?php foreach ($product->tags as $tag): ?>
 
                             <a href="<?= Html::encode(Url::to(['tag', 'id' => $tag->id])) ?>">
@@ -117,8 +118,6 @@ $price = PriceHelper::format($product->price_new);
 
                         [
                             'header' => 'Info',
-
-
                             'content' => '<div class="accordion-item">Автор<div>' . "{$author}" . '</div></div><div class="accordion-item">Формат<div>WAV
 48kHz, 24bit</div></div><div class="accordion-item">Цена<div>' . "{$price}" . '</div></div>',
 
