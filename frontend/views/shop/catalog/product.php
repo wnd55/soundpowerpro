@@ -72,7 +72,7 @@ $price = PriceHelper::format($product->price_new);
 
                     <p><?= Yii::$app->formatter->asHtml($product->description) ?></p>
 
-                    <p>Теги: <?php foreach ($product->tags as $tag): ?>
+                    <p> Теги: <?php foreach ($product->tags as $tag): ?>
 
                             <a href="<?= Html::encode(Url::to(['tag', 'id' => $tag->id])) ?>">
 
