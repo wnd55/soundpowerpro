@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
 
     <div class="box box-default">
-        <div class="box-header with-border">Warehouse</div>
+        <div class="box-header with-border">Склад</div>
         <div class="box-body">
             <?= $form->field($model, 'weight')->textInput(['maxlength' => true]) ?>
         </div>
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <div class="row">
         <div class="col-md-6">
             <div class="box box-default">
-                <div class="box-header with-border">Categories</div>
+                <div class="box-header with-border">Категории</div>
                 <div class="box-body">
                     <?= $form->field($model->categories, 'main_category')->dropDownList($model->categories->categoriesList(), ['prompt' => '']) ?>
                     <?= $form->field($model->categories, 'additional_categories')->checkboxList($model->categories->categoriesList()) ?>
@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
         <div class="col-md-6">
             <div class="box box-default">
-                <div class="box-header with-border">Tags</div>
+                <div class="box-header with-border">Теги</div>
                 <div class="box-body">
                     <?= $form->field($model->tags, 'existing')->checkboxList($model->tags->tagsList()) ?>
                     <?= $form->field($model->tags, 'textNew')->textInput() ?>

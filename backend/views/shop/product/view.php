@@ -13,6 +13,7 @@ use yii\widgets\DetailView;
 use shop\helpers\PriceHelper;
 use shop\helpers\ProductHelper;
 use shop\helpers\WeightHelper;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -22,7 +23,7 @@ use shop\helpers\WeightHelper;
 $this->registerJsFile('@web/js/addJS1.js');
 
 $this->title = $product->name;
-$this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Треки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 if (!empty($product->main_photo_id)) {
     $path = $product->mainPhoto->getAdminAudioFile($product->id, $product->main_photo_id);
@@ -33,15 +34,15 @@ if (!empty($product->main_photo_id)) {
 
     <p>
         <?php if ($product->isActive()): ?>
-            <?= Html::a('Draft', ['draft', 'id' => $product->id], ['class' => 'btn btn-primary', 'data-method' => 'post']) ?>
+            <?= Html::a('Черновик', ['draft', 'id' => $product->id], ['class' => 'btn btn-primary', 'data-method' => 'post']) ?>
         <?php else: ?>
-            <?= Html::a('Activate', ['activate', 'id' => $product->id], ['class' => 'btn btn-success', 'data-method' => 'post']) ?>
+            <?= Html::a('Активация', ['activate', 'id' => $product->id], ['class' => 'btn btn-success', 'data-method' => 'post']) ?>
         <?php endif; ?>
-        <?= Html::a('Update', ['update', 'id' => $product->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $product->id], [
+        <?= Html::a('Изменить', ['update', 'id' => $product->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить', ['delete', 'id' => $product->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Вы уверены, что хотите удалить этот трек?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -134,7 +135,7 @@ if (!empty($product->main_photo_id)) {
 
 
 <div class="box">
-    <div class="box-header with-border">Description</div>
+    <div class="box-header with-border">Описание</div>
     <div class="box-body">
         <?= Yii::$app->formatter->asHtml($product->description, [
             'Attr.AllowedRel' => array('nofollow'),
@@ -171,7 +172,7 @@ if (!empty($product->main_photo_id)) {
 </div>
 
 
-<div class="box" id="photos">
+<div class="box" id="audio">
     <div class="box-header with-border">mp3</div>
     <div class="box-body">
         <img src="<?= Yii::getAlias('@web/images/logo_mp3.png') ?>" title="Your Store" alt="Your Store"
@@ -226,13 +227,56 @@ if (!empty($product->main_photo_id)) {
 
     <?php else: ?>
 
-    <div class="box">
-        <div class="box-header with-border">Загрузить Stems</div>
-        <div class="box-body">
+        <div class="box" id="stems">
+            <div class="box-header with-border">
+               <h4>Stems</h4>
+            </div>
 
+            <div>
+
+                <div> <?= Html::a('Загрузить Stems', ['stems', 'id' => $product->id], ['class' => 'btn btn-primary']) ?></div>
+            </div>
+            <div class="box-body stems">
+
+
+
+
+                <?php foreach ($product->stems as $stem): ?>
+                    <?=$stem->file; ?>
+                <div class="col-md-2 col-xs-3" style="text-align: center; margin: 20px 20px">
+                    <div class="btn-group" style="display: 30px">
+                        <?= Html::a('<span class="glyphicon glyphicon-arrow-left"></span>', ['move-stem-up', 'stemId' => $stem->id, 'productId' => $product->id], [
+                            'class' => 'btn btn-small',
+                            'data-method' => 'post',
+                        ]); ?>
+
+
+                        <?= Html::a('<span class="glyphicon glyphicon-remove"></span>', ['delete-stem', 'stemId' => $stem->id, 'productId' => $product->id], [
+                            'class' => 'btn btn-small',
+                            'data-method' => 'post',
+                            'data-confirm' => 'Remove photo?',
+                        ]); ?>
+                        <?= Html::a('<span class="glyphicon glyphicon-arrow-right"></span>', ['move-stem-down', 'stemId' => $stem->id, 'productId' => $product->id], [
+                            'class' => 'btn btn-small',
+                            'data-method' => 'post',
+                        ]); ?>
+                    </div>
+
+                <div>
+                    <audio controls controlsList="nodownload">
+
+                        <source src="<?=Url::to('@web/uploads/mp3/stems/' . $stem->file); ?>"
+                                type="audio/mpeg">
+                    </audio>
+
+                </div>
+
+                </div>
+                <?php endforeach; ?>
+
+            </div>
 
         </div>
-    </div>
     <?php endif; ?>
 
 

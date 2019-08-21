@@ -8,21 +8,20 @@
 
 namespace backend\controllers\shop;
 
+use Yii;
 use backend\forms\shop\ProductSearch;
-use shop\entities\shop\product\Modification;
 use shop\entities\shop\product\Product;
 use shop\forms\manage\shop\product\AudioFilesForm;
 use shop\forms\manage\shop\product\PriceForm;
 use shop\forms\manage\shop\product\ProductEditForm;
 use shop\forms\manage\shop\product\QuantityForm;
+use shop\forms\manage\shop\product\StemsForm;
 use shop\services\manage\shop\ProductManageService;
-use Yii;
 use shop\forms\manage\shop\product\ProductCreateForm;
-use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
+
 
 class ProductController extends Controller
 {
@@ -50,7 +49,10 @@ class ProductController extends Controller
                     'activate' => ['POST'],
                     'draft' => ['POST'],
                     'delete-audio' => ['POST'],
-                    'make-main-photo' => ['POST'],
+                    'delete-stem' => ['POST'],
+                    'move-stem-up' => ['POST'],
+                    'move-stem-down' => ['POST']
+
                 ],
             ],
         ];
@@ -105,8 +107,17 @@ class ProductController extends Controller
 
         $product = $this->findModel($id);
 
-        $photosForm = new AudioFilesForm();
 
+        if ($product->mainAudio) {
+
+            return $this->render('view', [
+                'product' => $product,
+
+            ]);
+
+        }
+
+        $photosForm = new AudioFilesForm();
         if ($photosForm->load(Yii::$app->request->post()) && $photosForm->validate()) {
             try {
                 $this->service->addPhotos($product->id, $photosForm);
@@ -123,6 +134,107 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
+
+    public function actionStems($id)
+    {
+        $product = $this->findModel($id);
+
+        $model = new StemsForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            try {
+
+                $this->service->addStems($product->id, $model);
+                return $this->redirect(['view', 'id' => $product->id]);
+
+            } catch (\DomainException $e) {
+
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('stems', [
+
+            'product' => $product,
+            'model' => $model
+
+        ]);
+
+
+    }
+
+    /**
+     * @param $stemId
+     * @param $productId
+     * @return \yii\web\Response
+     */
+
+    public function actionDeleteStem($stemId, $productId)
+    {
+
+        try {
+
+            $this->service->removeStem($stemId, $productId);
+
+        } catch (\DomainException $e) {
+
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+
+
+        return $this->redirect(['view', 'id' => $productId, '#' => 'stems']);
+
+
+    }
+
+    /**
+     * @param $stemId
+     * @param $productId
+     * @return \yii\web\Response
+     */
+    public function actionMoveStemUp($stemId, $productId)
+    {
+        try {
+
+            $this->service->moveStemUp($stemId, $productId);
+
+        } catch (\DomainException $e) {
+
+            Yii::$app->session->setFlash('error', $e->getMessage());
+
+        }
+
+        return $this->redirect(['view', 'id' => $productId, '#' => 'stems']);
+    }
+
+    /**
+     * @param $stemId
+     * @param $productId
+     * @return \yii\web\Response
+     */
+
+    public function actionMoveStemDown($stemId, $productId)
+    {
+
+        try {
+
+            $this->service->moveStemDown($stemId, $productId);
+
+        } catch (\DomainException $e) {
+
+            Yii::$app->session->setFlash('error', $e->getMessage());
+
+        }
+
+        return $this->redirect(['view', 'id' => $productId, '#' => 'stems']);
+
+    }
 
     /**
      * @param integer $id
@@ -273,7 +385,6 @@ class ProductController extends Controller
     }
 
 
-
     /**
      * @param integer $productId
      * @param $photoId
@@ -284,38 +395,13 @@ class ProductController extends Controller
     public function actionDeleteAudio($productId, $photoId)
     {
         try {
-            $this->service->removePhoto($productId, $photoId);
+            $this->service->removeAudio($productId, $photoId);
         } catch (\DomainException $e) {
             Yii::$app->session->setFlash('error', $e->getMessage());
         }
 
-        return $this->redirect(['view', 'id' => $productId, '#' => 'photos']);
+        return $this->redirect(['view', 'id' => $productId, '#' => 'audio']);
     }
 
-
-    /**
-     * @param integer $productId
-     * @param $photoId
-     * @return mixed
-     * @throws
-     */
-
-
-    public function actionMakeMainPhoto($productId, $photoId)
-    {
-
-        try {
-
-            $this->service->makeMainPhoto($productId, $photoId);
-
-
-        } catch (\DomainException $e) {
-
-            Yii::$app->session->setFlash('error', $e->getMessage());
-        }
-
-
-        return $this->redirect(['view', 'id' => $productId, '#' => 'photos']);
-    }
 
 }

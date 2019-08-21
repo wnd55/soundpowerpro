@@ -52,6 +52,7 @@ use yii\behaviors\SluggableBehavior;
  * @property AudioFile $mainPhoto
  * @property AudioFile $mainAudio
  * @property AudioFile $file
+ * @property  Stems $stems
 
  */
 class Product extends ActiveRecord

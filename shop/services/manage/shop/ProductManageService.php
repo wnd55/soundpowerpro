@@ -46,18 +46,19 @@ class ProductManageService
     private $brands;
     private $categories;
     private $tags;
-    private $photo;
+    private $audioFile;
+    private $stems;
 
 
-    public function __construct(ProductRepository $products, BrandRepository $brands, CategoryRepository $categories, TagRepository $tags, AudioFile $photo)
+    public function __construct(ProductRepository $products, BrandRepository $brands, CategoryRepository $categories, TagRepository $tags, AudioFile $audioFile, Stems $stems)
     {
 
         $this->products = $products;
         $this->brands = $brands;
         $this->categories = $categories;
         $this->tags = $tags;
-
-        $this->photo = $photo;
+        $this->audioFile = $audioFile;
+        $this->stems = $stems;
 
 
     }
@@ -212,42 +213,98 @@ class ProductManageService
 
     /**
      * @param $id
-     * @param StemsForm $form
+     * @param StemsForm $model
      */
-    public function addStems($id, StemsForm $form)
+    public function addStems($id, StemsForm $model)
     {
 
-        /**
-         * @var $product Product
-         *
-         */
         $product = $this->products->get($id);
 
-        $stems = UploadedFile::getInstance($form, 'file');
+        if ($product->stems) {
 
-        foreach ($stems as $stem) {
+            $sort = Stems::find()->where(['product_id' => $product->id])->orderBy('sort')->max('sort') + 1;
+            $stems = UploadedFile::getInstances($model, 'file');
 
-            $randomName = $product->name . '_stem_' . Yii::$app->getSecurity()->generateRandomString(7);
+            foreach ($stems as $stem) {
 
-            $stem->saveAs('uploads/mp3/stems/' . $randomName . '.' . $stem->getExtension());
+                $randomName = $product->name . '_stem_' . Yii::$app->getSecurity()->generateRandomString(7);
 
-            $stemName = $randomName . '.' . $stem->getExtension();
+                $stem->saveAs('uploads/mp3/stems/' . $randomName . '.' . $stem->getExtension());
 
 
+                $stemName = $randomName . '.' . $stem->getExtension();
 
-            $stem = Stems::create($product->id, $stemName, self::$i++);
+                $stem = Stems::create($product->id, $stemName, $sort++);
 
-            if (!$stem->save()) {
+                if (!$stem->save()) {
 
-                throw new \RuntimeException('Ошибка сохранения');
+                    throw new \RuntimeException('Ошибка сохранения');
+                }
+
+
+            }
+        } else {
+
+            $stems = UploadedFile::getInstances($model, 'file');
+
+            foreach ($stems as $stem) {
+
+                $randomName = $product->name . '_stem_' . Yii::$app->getSecurity()->generateRandomString(7);
+
+                $stem->saveAs('uploads/mp3/stems/' . $randomName . '.' . $stem->getExtension());
+
+
+                $stemName = $randomName . '.' . $stem->getExtension();
+
+                $stem = Stems::create($product->id, $stemName, self::$i++);
+
+                if (!$stem->save()) {
+
+                    throw new \RuntimeException('Ошибка сохранения');
+                }
+
+
             }
 
-
         }
+
+    }
+    //Remove stem
+
+    /**
+     * @param $stemId
+     * @param $productId
+     */
+    public function removeStem($stemId, $productId)
+    {
+
+        $this->stems->removeStem($stemId, $productId);
 
 
     }
 
+    /**
+     * @param $stemId
+     * @param $productId
+     */
+    public function moveStemUp($stemId, $productId)
+    {
+
+        $this->stems->moveStemUp($stemId, $productId);
+
+    }
+
+    /**
+     * @param $stemId
+     * @param $productId
+     */
+    public function moveStemDown($stemId, $productId)
+    {
+
+        $this->stems->moveStemDown($stemId, $productId);
+
+
+    }
     //Edit product
 
     /**
@@ -337,7 +394,7 @@ class ProductManageService
     public function remove($id)
     {
 
-        $this->photo->unlinkPhotos($id);
+        $this->audioFile->unlinkPhotos($id);
 
         $product = $this->products->get($id);
 
@@ -365,7 +422,7 @@ class ProductManageService
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
 
     //Price
@@ -396,12 +453,12 @@ class ProductManageService
 //AudioFile
 
 
-    public function removePhoto($productId, $photoId)
+
+
+    public function removeAudio($productId, $photoId)
     {
 
-        $this->photo->removePhoto($productId, $photoId);
+        $this->audioFile->removeAudio($productId, $photoId);
 
     }
-
-
 }
