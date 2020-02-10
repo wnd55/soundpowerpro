@@ -25,7 +25,7 @@ class ChatForm extends Model
 
 
             [['name', 'text',], 'string', 'max' => 255],
-            [['name', 'text',], 'required'],
+            [['name',], 'required'],
         ];
 
 

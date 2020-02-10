@@ -13,7 +13,7 @@ document.getElementById("disconx_btn").style.display = "none";
 
 
 btnOk.onclick = function () {
-    hr.open("POST", "chat/chat-intake", true);
+    hr.open("POST", "/chat/chat-intake", true);
     hr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     hr.onreadystatechange = function () {
         if (hr.readyState == 4 && hr.status == 200) {
@@ -48,7 +48,7 @@ btnOk.onclick = function () {
 
 function connect() {
     if (window.EventSource) {
-        source = new EventSource("chat/server");
+        source = new EventSource("/chat/server");
         source.addEventListener("message", function (event) {
             if (event.data != last_data && event.data != "") {
                 chattext.innerHTML += event.data + "<hr>";
@@ -75,7 +75,7 @@ function disconnect() {
 
 function chatPost() {
     chat_btn.disabled = true;
-    hr.open("POST", "chat/chat-post", true);
+    hr.open("POST", "/chat/chat-post", true);
     hr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     hr.onreadystatechange = function () {
         if (hr.readyState == 4 && hr.status == 200) {

@@ -1,33 +1,16 @@
-/* Body Styles */
-body {
-    margin: 0px;
-    padding: 0px;
-    font-family: 'Open Sans', sans-serif;
-    background-color: #fff;
-}
 
-
-.author {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    color: #999;
-}
-
-.author a {
-    color: #777;
-    text-decoration: none;
-}
-
-.author a:hover {
-    color: blue;
-}
 
 header.dark blockquote { color:#fff; }
 header.light blockquote { color:#000; }
+a {
+    color: #777;
 
+}
+
+a:hover, a:active, a:focus{
+
+    color: #333;
+}
 blockquote {
     max-width: 1000px;
     margin:0 auto;
@@ -39,7 +22,7 @@ blockquote {
 blockquote h2 { padding-right: 40px; margin: 0px; }
 header.dark blockquote a {color: orange; text-decoration: underline;}
 header.light blockquote a {text-decoration: underline;}
-header { min-height: 450px; }
+header { min-height: 48px; }
 header.dark { background-color: #444; }
 header.light { background-color: #fff; }
 
@@ -130,6 +113,7 @@ ul.main-nav > li ul.sub-menu-lists > li > a {
 @media only screen and (max-width:768px) {
     .sub-menu-head { color:orange; }
     .ic.menu { display: block; }
+    header { min-height: 80px; }
     header.dark .ic.menu .line { background-color: #fff; }
     header.light .ic.menu .line { background-color: #000; }
     .ic.menu .line {
@@ -243,12 +227,15 @@ ul.main-nav > li ul.sub-menu-lists > li > a {
     .banners-area { padding-bottom: 0px;  }
     .banners-area div { margin-bottom: 15px;  }
     .banners-area { border-top: 1px solid #444; }
+
+
+
 }
 
 @media only screen and (min-width:769px) {
     .ic.menu { display: none; }
     /* Main Menu for Desktop Devices  */
-    ul.main-nav { display: block; position: relative; }
+    ul.main-nav { display: block; position: relative;}
     .sub-menu-block { padding: 15px; }
 
     /* Sub Menu */
@@ -349,4 +336,51 @@ ul.main-nav > li ul.sub-menu-lists > li > a {
         border-bottom: 5px solid #666;
     }
     .banners-area { border-top: 1px solid #ccc; }
+}
+
+li.dropdown{
+
+    position: relative;
+    display: inline-block;
+
+}
+ .sub-menu-block .dropdown-content{
+
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+header.dark ul.main-nav > li.active > a{
+    color: #333;
+    background-image: linear-gradient(to right, rgba(58, 58, 58, 0.51), rgba(255, 255, 255, 0.72));
+}
+
+ul.main-nav > li ul.sub-menu-lists > li.active > a{
+
+    color: #2a2a2a;
+}
+
+ul.main-nav button.btn-link{
+
+    color: #fff;
+    padding: 21px 20px;
+    vertical-align: baseline;
+
+}
+
+ul.main-nav button.btn-link:hover{
+
+    color: #2a2a2a;
+
+
 }

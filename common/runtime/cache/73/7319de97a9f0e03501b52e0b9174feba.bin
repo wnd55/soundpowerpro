@@ -1,0 +1,7 @@
+a:2:{i:0;s:215:"<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+ <sitemap>
+  <loc>https://www.soundpowerpro.ru/sitemap-shop-products-0.xml</loc>
+ </sitemap>
+</sitemapindex>
+";i:1;O:25:"yii\caching\TagDependency":3:{s:4:"tags";a:1:{i:0;s:8:"products";}s:4:"data";a:1:{s:32:"260adfe40dddcd893faed0c0a3fb8867";s:21:"0.71634800 1579076435";}s:8:"reusable";b:0;}}
